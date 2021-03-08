@@ -1,77 +1,60 @@
 package de.dytanic.cloudnet.ext.chat;
 
-import de.dytanic.cloudnet.driver.CloudNetDriver;
-import de.dytanic.cloudnet.driver.permission.IPermissionGroup;
-import de.dytanic.cloudnet.driver.permission.IPermissionUser;
-import org.bukkit.ChatColor;
+import de.dytanic.cloudnet.ext.chat.listener.CloudNetChatListener;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class CloudNetChatPlugin extends JavaPlugin implements Listener {
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.Function;
 
-    private String format;
+public class CloudNetChatPlugin extends JavaPlugin {
+
+    private static CloudNetChatPlugin instance;
+
+    private String defaultFormat;
+    private Function<Player, String> formatFunction = player -> defaultFormat;
+
+    @Override
+    public void onLoad() {
+        instance = this;
+    }
 
     @Override
     public void onEnable() {
         this.getConfig().options().copyDefaults(true);
         this.saveConfig();
 
-        this.format = this.getConfig().getString("format");
+        this.defaultFormat = getConfig().getString("format");
 
-        this.getServer().getPluginManager().registerEvents(this, this);
+        getServer().getPluginManager().registerEvents(new CloudNetChatListener(this), this);
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void handleChat(AsyncPlayerChatEvent event) {
-        Player player = event.getPlayer();
+    @Nonnull
+    @CheckReturnValue
+    public String getDefaultFormat() {
+        return defaultFormat;
+    }
 
-        IPermissionUser user = CloudNetDriver.getInstance().getPermissionManagement().getUser(player.getUniqueId());
+    @Nullable
+    @CheckReturnValue
+    public Function<Player, String> getFormatFunction() {
+        return formatFunction;
+    }
 
-        if (user == null) {
-            return;
-        }
+    public void setDefaultFormatFunction() {
+        this.formatFunction = player -> defaultFormat;
+    }
 
-        IPermissionGroup group = CloudNetDriver.getInstance().getPermissionManagement().getHighestPermissionGroup(user);
+    public void setFormatFunction(@Nullable Function<Player, String> formatFunction) {
+        this.formatFunction = formatFunction;
+    }
 
-        String message = event.getMessage().replace("%", "%%");
-        if (player.hasPermission("cloudnet.chat.color")) {
-            message = ChatColor.translateAlternateColorCodes('&', message);
-        }
-
-        if (ChatColor.stripColor(message).trim().isEmpty()) {
-            event.setCancelled(true);
-            return;
-        }
-
-        String format = this.format
-                .replace("%name%", player.getName())
-                .replace("%uniqueId%", player.getUniqueId().toString());
-
-        if (group != null) {
-            format = ChatColor.translateAlternateColorCodes('&',
-                    format
-                            .replace("%group%", group.getName())
-                            .replace("%display%", group.getDisplay())
-                            .replace("%prefix%", group.getPrefix())
-                            .replace("%suffix%", group.getSuffix())
-                            .replace("%color%", group.getColor())
-            );
-        } else {
-            format = ChatColor.translateAlternateColorCodes('&',
-                    format
-                            .replace("%group%", "")
-                            .replace("%display%", "")
-                            .replace("%prefix%", "")
-                            .replace("%suffix%", "")
-                            .replace("%color%", "")
-            );
-        }
-
-        event.setFormat(format.replace("%message%", message));
+    @Nonnull
+    @CheckReturnValue
+    public static CloudNetChatPlugin getInstance() {
+        return instance;
     }
 
 }
