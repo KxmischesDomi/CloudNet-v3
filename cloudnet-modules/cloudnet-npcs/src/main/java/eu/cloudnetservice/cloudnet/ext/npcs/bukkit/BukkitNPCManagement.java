@@ -192,12 +192,14 @@ public class BukkitNPCManagement extends AbstractNPCManagement {
         );
 
         String onlineServers = String.valueOf(services.size());
+        String availableServers = String.valueOf(filterNPCServices(cloudNPC).size());
 
         String infoLine = cloudNPC.getInfoLine()
                 .replace("%group%", cloudNPC.getTargetGroup()).replace("%g%", cloudNPC.getTargetGroup())
                 .replace("%online_players%", onlinePlayers).replace("%o_p%", onlinePlayers)
                 .replace("%max_players%", maxPlayers).replace("%m_p%", maxPlayers)
-                .replace("%online_servers%", onlineServers).replace("%o_s%", onlineServers);
+                .replace("%online_servers%", onlineServers).replace("%o_s%", onlineServers)
+                .replace("%available_servers%", availableServers).replace("%a_s%", availableServers);
 
         this.getInfoLineStand(cloudNPC).ifPresent(infoLineStand -> infoLineStand.setCustomName(infoLine));
     }
