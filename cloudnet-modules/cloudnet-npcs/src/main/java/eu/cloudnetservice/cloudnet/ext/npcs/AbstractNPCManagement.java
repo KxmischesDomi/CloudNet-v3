@@ -10,6 +10,7 @@ import de.dytanic.cloudnet.driver.event.events.channel.ChannelMessageReceiveEven
 import de.dytanic.cloudnet.driver.network.def.PacketConstants;
 import de.dytanic.cloudnet.driver.service.ServiceEnvironmentType;
 import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
+import de.dytanic.cloudnet.driver.service.ServiceTask;
 import de.dytanic.cloudnet.ext.bridge.ServiceInfoStateWatcher;
 import de.dytanic.cloudnet.wrapper.Wrapper;
 import eu.cloudnetservice.cloudnet.ext.npcs.configuration.NPCConfiguration;
@@ -103,6 +104,12 @@ public abstract class AbstractNPCManagement extends ServiceInfoStateWatcher {
                         && Arrays.asList(pair.getFirst().getConfiguration().getGroups()).contains(cloudNPC.getTargetGroup()))
                 .sorted(Comparator.comparingInt(pair -> pair.getFirst().getServiceId().getTaskServiceId()))
                 .collect(Collectors.toList());
+    }
+
+    public int getMaxServices(@NotNull CloudNPC cloudNPC) {
+        ServiceTask serviceTask = CloudNetDriver.getInstance().getServiceTaskProvider().getServiceTask(cloudNPC.getTargetGroup());
+        if (serviceTask == null) return 0;
+        return serviceTask.getProperties().getDocument("smartConfig").getInt("maxServiceCount");
     }
 
     /**
