@@ -47,11 +47,12 @@ public class SyncProxyCloudNetListener {
         if (!event.getChannel().equals(SyncProxyConstants.SYNC_PROXY_CHANNEL_NAME)) {
             return;
         }
-
         if (SyncProxyConstants.SYNC_PROXY_UPDATE_CONFIGURATION.equals(event.getMessage().toLowerCase())) {
             SyncProxyConfiguration syncProxyConfiguration = event.getData().get("syncProxyConfiguration", SyncProxyConfiguration.TYPE);
 
             this.syncProxyManagement.setSyncProxyConfiguration(syncProxyConfiguration);
+        } else if (SyncProxyConstants.SYNC_PROXY_CHECK_WHITELIST.equals(event.getMessage().toLowerCase())) {
+            this.syncProxyManagement.checkWhitelist();
         }
     }
 

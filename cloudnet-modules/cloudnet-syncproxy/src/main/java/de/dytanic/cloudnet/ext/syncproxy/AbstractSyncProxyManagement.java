@@ -37,7 +37,7 @@ public abstract class AbstractSyncProxyManagement {
 
     public abstract void updateTabList();
 
-    protected abstract void checkWhitelist();
+    public abstract void checkWhitelist();
 
     protected abstract void broadcastServiceStateChange(String key, ServiceInfoSnapshot serviceInfoSnapshot);
 

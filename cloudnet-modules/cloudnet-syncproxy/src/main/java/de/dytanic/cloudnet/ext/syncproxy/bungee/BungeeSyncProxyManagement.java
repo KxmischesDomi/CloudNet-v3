@@ -65,7 +65,7 @@ public class BungeeSyncProxyManagement extends AbstractSyncProxyManagement {
     }
 
     @Override
-    protected void checkWhitelist() {
+    public void checkWhitelist() {
         SyncProxyProxyLoginConfiguration syncProxyProxyLoginConfiguration = super.getLoginConfiguration();
 
         if (syncProxyProxyLoginConfiguration != null) {

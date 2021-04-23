@@ -6,6 +6,8 @@ import de.dytanic.cloudnet.command.sub.SubCommand;
 import de.dytanic.cloudnet.command.sub.SubCommandBuilder;
 import de.dytanic.cloudnet.common.WildcardUtil;
 import de.dytanic.cloudnet.common.collection.Pair;
+import de.dytanic.cloudnet.common.document.gson.JsonDocProperty;
+import de.dytanic.cloudnet.common.document.gson.JsonDocument;
 import de.dytanic.cloudnet.common.language.LanguageManager;
 import de.dytanic.cloudnet.common.logging.DefaultLogFormatter;
 import de.dytanic.cloudnet.common.logging.IFormatter;
@@ -25,7 +27,10 @@ import de.dytanic.cloudnet.template.install.ServiceVersionType;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static de.dytanic.cloudnet.command.sub.SubCommandArgumentTypes.*;
@@ -285,6 +290,15 @@ public class CommandTasks extends CommandServiceConfigurationBase {
                                 ),
                         exactStringIgnoreCase("environment"),
                         exactEnum(ServiceEnvironmentType.class)
+                )
+                .generateCommand(
+                        (subCommand, sender, command, args, commandLine, properties, internalProperties) ->
+                                forEachTasks(
+                                        (ServiceConfigurationBase[]) internalProperties.get("tasks"),
+                                        task -> task.getProperties().getDocument("smartConfig").append("maxServiceCount", args.argument(4))
+                                ),
+                        exactStringIgnoreCase("maxServiceCount"),
+                        integer("maxServiceCount")
                 )
 
                 .removeLastPostHandler();

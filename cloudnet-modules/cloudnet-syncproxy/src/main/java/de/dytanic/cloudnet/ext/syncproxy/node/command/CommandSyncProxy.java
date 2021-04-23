@@ -6,6 +6,7 @@ import de.dytanic.cloudnet.command.sub.SubCommandHandler;
 import de.dytanic.cloudnet.common.document.gson.JsonDocument;
 import de.dytanic.cloudnet.common.language.LanguageManager;
 import de.dytanic.cloudnet.driver.CloudNetDriver;
+import de.dytanic.cloudnet.ext.syncproxy.AbstractSyncProxyManagement;
 import de.dytanic.cloudnet.ext.syncproxy.SyncProxyConstants;
 import de.dytanic.cloudnet.ext.syncproxy.configuration.*;
 import de.dytanic.cloudnet.ext.syncproxy.node.CloudNetSyncProxyModule;
@@ -155,6 +156,14 @@ public final class CommandSyncProxy extends SubCommandHandler {
                                 bool("enabled")
                         )
 
+                        .generateCommand(
+                                (subCommand, sender, command, args, commandLine, properties, internalProperties) -> {
+                                    sender.sendMessage("Checking Whitelist...");
+                                    sendCheckWhitelistMessage();
+                                },
+                                exactStringIgnoreCase("checkWhitelist")
+                        )
+
                         .getSubCommands(),
                 "syncproxy", "sp"
         );
@@ -172,6 +181,14 @@ public final class CommandSyncProxy extends SubCommandHandler {
                 SyncProxyConstants.SYNC_PROXY_CHANNEL_NAME,
                 SyncProxyConstants.SYNC_PROXY_UPDATE_CONFIGURATION,
                 new JsonDocument("syncProxyConfiguration", CloudNetSyncProxyModule.getInstance().getSyncProxyConfiguration())
+        );
+    }
+
+    private static void sendCheckWhitelistMessage() {
+        CloudNetDriver.getInstance().getMessenger().sendChannelMessage(
+                SyncProxyConstants.SYNC_PROXY_CHANNEL_NAME,
+                SyncProxyConstants.SYNC_PROXY_CHECK_WHITELIST,
+                new JsonDocument("syncProxyCheckWhitelist")
         );
     }
 

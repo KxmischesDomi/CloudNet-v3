@@ -59,7 +59,7 @@ public class VelocitySyncProxyManagement extends AbstractSyncProxyManagement {
 
 
     @Override
-    protected void checkWhitelist() {
+    public void checkWhitelist() {
         if (super.loginConfiguration != null) {
             for (Player player : this.proxyServer.getAllPlayers()) {
                 if (super.loginConfiguration.isMaintenance()
