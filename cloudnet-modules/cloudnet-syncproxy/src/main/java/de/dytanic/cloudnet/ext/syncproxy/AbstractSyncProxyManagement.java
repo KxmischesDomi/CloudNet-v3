@@ -120,8 +120,6 @@ public abstract class AbstractSyncProxyManagement {
                     .filter(tabListConfiguration -> tabListConfiguration.getTargetGroup() != null &&
                             Arrays.asList(Wrapper.getInstance().getServiceConfiguration().getGroups()).contains(tabListConfiguration.getTargetGroup()))
                     .findFirst().orElse(null);
-
-            this.checkWhitelist();
         }
     }
 
