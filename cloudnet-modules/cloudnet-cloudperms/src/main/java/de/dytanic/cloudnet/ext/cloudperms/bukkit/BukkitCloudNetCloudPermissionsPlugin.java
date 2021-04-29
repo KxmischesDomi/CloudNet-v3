@@ -181,6 +181,11 @@ public final class BukkitCloudNetCloudPermissionsPlugin extends JavaPlugin {
         }
     }
 
+    public void injectOperator(Player player) {
+        if (player.hasPermission("minecraft.operator")) {
+            player.setOp(true);
+        }
+    }
 
     private void initScoreboard(Player all) {
         if (all.getScoreboard().equals(all.getServer().getScoreboardManager().getMainScoreboard())) {

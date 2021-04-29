@@ -27,6 +27,7 @@ public final class BukkitCloudNetCloudPermissionsPlayerListener implements Liste
         }, Bukkit.getOnlineMode());
 
         BukkitCloudNetCloudPermissionsPlugin.getInstance().injectCloudPermissible(event.getPlayer());
+        BukkitCloudNetCloudPermissionsPlugin.getInstance().injectOperator(event.getPlayer());
     }
 
     @EventHandler
