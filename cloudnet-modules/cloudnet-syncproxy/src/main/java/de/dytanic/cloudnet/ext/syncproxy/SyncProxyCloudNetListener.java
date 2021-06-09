@@ -70,6 +70,8 @@ public class SyncProxyCloudNetListener {
         .get("syncProxyConfiguration", SyncProxyConfiguration.TYPE);
 
       this.syncProxyManagement.setSyncProxyConfiguration(syncProxyConfiguration);
+    } else if (SyncProxyConstants.SYNC_PROXY_CHECK_WHITELIST.equals(event.getMessage().toLowerCase())) {
+      this.syncProxyManagement.checkWhitelist();
     }
   }
 
