@@ -208,8 +208,15 @@ public final class CommandSyncProxy extends SubCommandHandler {
           exactStringIgnoreCase("maintenance"),
           bool("enabled")
         )
+        .generateCommand(
+          (subCommand, sender, command, args, commandLine, properties, internalProperties) -> {
+            sender.sendMessage("Checking Whitelist...");
+              sendCheckWhitelistMessage();
+          },
+          exactStringIgnoreCase("checkWhitelist")
+       )
 
-        .getSubCommands(),
+       .getSubCommands(),
       "syncproxy", "sp"
     );
 
@@ -229,6 +236,14 @@ public final class CommandSyncProxy extends SubCommandHandler {
       new JsonDocument("syncProxyConfiguration", CloudNetSyncProxyModule.getInstance().getSyncProxyConfiguration())
     );
   }
+
+    private static void sendCheckWhitelistMessage() {
+        CloudNetDriver.getInstance().getMessenger().sendChannelMessage(
+                SyncProxyConstants.SYNC_PROXY_CHANNEL_NAME,
+                SyncProxyConstants.SYNC_PROXY_CHECK_WHITELIST,
+                new JsonDocument()
+        );
+    }
 
   private static SyncProxyProxyLoginConfiguration getSyncProxyLoginConfiguration(String group) {
     return CloudNetSyncProxyModule.getInstance().getSyncProxyConfiguration().getLoginConfigurations().stream()

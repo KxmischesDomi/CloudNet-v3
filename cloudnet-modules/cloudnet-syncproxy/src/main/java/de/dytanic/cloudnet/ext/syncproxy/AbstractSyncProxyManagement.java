@@ -166,7 +166,6 @@ public abstract class AbstractSyncProxyManagement {
       this.scheduleTabList();
     }
 
-    this.checkWhitelist();
   }
 
   protected void initialize() {
